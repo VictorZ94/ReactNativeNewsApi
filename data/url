@@ -1,0 +1,10 @@
+https://newsapi.org/v2/top-headlines?apiKey=db83c2608b804ec68ade0bf7df5fb0b0&category=general&q=bitcoin
+
+category:
+-business
+-entertainment
+-general
+-health
+-science
+-sports
+-technology

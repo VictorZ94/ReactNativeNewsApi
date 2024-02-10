@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import PropTypes from "prop-types";
 
 const CardNews = ({
   source,
@@ -103,3 +104,13 @@ const styles = StyleSheet.create({
     color: "#6366f1",
   },
 });
+
+CardNews.propTypes = {
+  source: PropTypes.objectOf(PropTypes.string),
+  title: PropTypes.string,
+  urlToImage: PropTypes.string,
+  publishedAt: PropTypes.string,
+  author: PropTypes.string,
+  url: PropTypes.string,
+  content: PropTypes.string,
+};

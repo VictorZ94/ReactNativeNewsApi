@@ -1,7 +1,8 @@
 // @packages
 import React from "react";
-import { StyleSheet, TextInput, View, Keyboard, Text } from "react-native";
+import { StyleSheet, TextInput, View, Keyboard } from "react-native";
 import { Feather, Entypo } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 
 const SearchBar = ({
   clicked = true,
@@ -79,3 +80,10 @@ const styles = StyleSheet.create({
     width: "90%",
   },
 });
+
+SearchBar.propTypes = {
+  clicked: PropTypes.bool,
+  searchNews: PropTypes.string,
+  setSearchNews: PropTypes.func,
+  setClicked: PropTypes.func,
+};

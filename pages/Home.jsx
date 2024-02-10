@@ -3,16 +3,15 @@ import {
   ActivityIndicator,
   FlatList,
   Keyboard,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableWithoutFeedback,
   View,
-  VirtualizedList,
 } from "react-native";
 import SearchBar from "../components/SearchBar";
 import { useCallback, useState } from "react";
 import uuid from "react-native-uuid";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 
 // @components
@@ -20,22 +19,18 @@ import CardNews from "../components/CardNews";
 import EmptySearch from "../components/EmptySearch";
 
 // @query
-import getNews from "../services/getNews";
 import useSearch from "../hooks/useSearch";
+import useGetNews from "../hooks/useGetNews";
 
 const Home = () => {
   const [clicked, setClicked] = useState(false);
   const { search, setSearch, error } = useSearch();
+  const [totalResults, setTotalResult] = useState(0);
   const [searchTopic] = useDebounce(search, 1000);
-  const { data, hasNextPage, isLoading, fetchNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["getNews", searchTopic],
-      queryFn: ({ pageParam = 1 }) => getNews(searchTopic, pageParam),
-      getNextPageParam: (lastPage, allPages) => {
-        if (lastPage?.length === 0) return undefined;
-        return allPages.length + 1;
-      },
-    });
+  const { data, hasNextPage, isLoading, fetchNextPage } = useGetNews(
+    searchTopic,
+    setTotalResult
+  );
   const infinityData = data?.pages?.map((page) => page).flat();
 
   const handleOnReachEnd = () => {
@@ -74,7 +69,9 @@ const Home = () => {
         <View style={styles.container}>
           <View style={styles.headerTitle}>
             <Text style={styles.headerTitleHighlight}>Latest News</Text>
-            <Text>Results: {infinityData?.length || 0}</Text>
+            <Text>
+              Results: {infinityData?.length || 0} of {totalResults}
+            </Text>
           </View>
           {isLoading ? (
             <ActivityIndicator animating={true} size="large" />
@@ -86,19 +83,8 @@ const Home = () => {
               numColumns={2}
               onEndReached={handleOnReachEnd}
               onEndReachedThreshold={0.5}
-              ListEmptyComponent={() => {
-                isFetchingNextPage ? (
-                  <ActivityIndicator animating={true} size="large" />
-                ) : (
-                  <EmptySearch />
-                );
-              }}
+              ListEmptyComponent={() => <EmptySearch />}
             />
-            // <VirtualizedList
-            //   getItem={infinityData}
-            //   renderItem={({ item }) => <CardNews {...item} />}
-            //   getItemCount={}
-            // />
           )}
         </View>
       </TouchableWithoutFeedback>
@@ -110,7 +96,9 @@ export default Home;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     paddingHorizontal: 15,
+    marginVertical: 15,
   },
   headerTitle: {
     flexDirection: "row",

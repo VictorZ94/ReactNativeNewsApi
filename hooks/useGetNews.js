@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import data from "../data/success.json";
 import { API_KEY_NEWS } from "@env";
 import axios from "axios";
 

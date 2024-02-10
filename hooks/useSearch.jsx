@@ -16,11 +16,6 @@ const useSearch = () => {
       return;
     }
 
-    if (search.length < 3) {
-      setError("No se puede buscar una noticia con menos de 3 caracteres.");
-      return;
-    }
-
     setError(null);
   }, [search]);
 

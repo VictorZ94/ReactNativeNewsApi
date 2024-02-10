@@ -17,7 +17,6 @@ const useGetNews = (searchTopic, setTotalResult) => {
       setTotalResult(data?.totalResults);
       return data?.articles;
     } catch (err) {
-      console.error(err);
       return [];
     }
   };
